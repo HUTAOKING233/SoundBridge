@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- 产物命名为 SoundBridge.*，避免打包后再改 exe/dll 名字（单文件发布时改不了）。 -->
+    <AssemblyName>SoundBridge</AssemblyName>
+    <RootNamespace>SoundBridge.App</RootNamespace>
+    <TargetFramework>net11.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <!-- 关闭隐式 using：WinForms SDK 会注入 global using System.Windows.Forms，
+         与 WPF 的 Application/Button/MessageBox 冲突（CS0104）。 -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    <ApplicationIcon>Assets\App.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../SoundBridge.Core/SoundBridge.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\App.ico" CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+  <!-- .NET 11 WPF mixed-mode assemblies and their native host must load from disk.
+       https://github.com/dotnet/wpf/issues/11842 -->
+  <Target Name="ExcludeWpfMixedModeFilesFromBundle" AfterTargets="ComputeResolvedFilesToPublishList"
+          Condition="'$(PublishSingleFile)' == 'true' and '$(SelfContained)' == 'true'">
+    <ItemGroup>
+      <ResolvedFileToPublish Update="@(ResolvedFileToPublish)"
+          Condition="'%(Filename)%(Extension)' == 'DirectWriteForwarder.dll' or '%(Filename)%(Extension)' == 'System.Printing.dll' or '%(Filename)%(Extension)' == 'ijwhost.dll'"
+          ExcludeFromSingleFile="true" />
+    </ItemGroup>
+  </Target>
+</Project>

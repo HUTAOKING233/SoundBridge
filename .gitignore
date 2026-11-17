@@ -1,0 +1,33 @@
+# ---- 构建产物 ----
+bin/
+obj/
+x64/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.cache
+.vs/
+
+# ---- 本地临时目录（排查/离线包）----
+.build-tmp/
+.dotnet-home/
+.nuget-packages/
+.nuget-feed/
+.memsearch/
+.codegraph/
+
+# ---- 旧项目备份（内嵌独立 git 仓库，不纳入本仓库）----
+legacy/
+
+# ---- 系统 ----
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---- 打包产物 ----
+dist/
+publish/
+log.txt
+SoundBridge.log
+startup-crash.txt
